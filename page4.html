@@ -50,15 +50,28 @@
             }
         }
 
-        .header-photo {
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeIn 1s ease-out 0.5s both;
+        }
+
+        .photo-item {
             width: 200px;
             height: 200px;
-            margin: 0 auto 2rem;
             border-radius: 50%;
             overflow: hidden;
             border: 6px solid var(--rose-medium);
             box-shadow: 0 10px 30px rgba(216, 27, 96, 0.2);
-            animation: photoReveal 1.5s ease-out 0.5s both;
+            animation: photoReveal 1.5s ease-out 0.8s both;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         @keyframes photoReveal {
@@ -70,12 +83,6 @@
                 opacity: 1;
                 transform: scale(1) rotate(0deg);
             }
-        }
-
-        .header-photo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
         }
 
         .letter-header {
@@ -307,8 +314,14 @@
 </head>
 <body>
     <div class="container">
-        <div class="header-photo">
-            <img src="images/foto-nueva-1.jpg" alt="Mi amor">
+        <!-- Galería de fotos al inicio -->
+        <div class="photo-gallery">
+            <div class="photo-item">
+                <img src="images/foto-nueva-1.jpg" alt="Mi amor">
+            </div>
+            <div class="photo-item">
+                <img src="images/foto-nueva-2.jpg" alt="Tu belleza">
+            </div>
         </div>
 
         <div class="letter-header">
