@@ -190,6 +190,87 @@
             }
         }
 
+        /* Botones de respuesta */
+        .response-container {
+            margin-top: 3rem;
+            text-align: center;
+            animation: fadeIn 1s ease-out 3s both;
+        }
+
+        .response-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--rose-dark);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            align-items: center;
+            min-height: 150px;
+        }
+
+        .btn-response {
+            font-family: 'Montserrat', sans-serif;
+            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-si {
+            background: linear-gradient(135deg, var(--rose-dark), var(--rose-accent));
+            color: white;
+        }
+
+        .btn-si:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #bbb, #999);
+            color: white;
+            position: relative;
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #999, #777);
+        }
+
+        /* Animación de crecimiento del Sí */
+        .btn-si.grow {
+            animation: growButton 0.5s ease-out forwards;
+        }
+
+        @keyframes growButton {
+            to {
+                transform: scale(1.3);
+                padding: 2rem 5rem;
+                font-size: 2rem;
+            }
+        }
+
+        /* Animación de desaparición del No */
+        .btn-no.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.5);
+                pointer-events: none;
+            }
+        }
+
         /* Confeti */
         .confetti {
             position: fixed;
@@ -206,12 +287,28 @@
                 opacity: 0;
             }
         }
+
+        /* Mensaje final */
+        .final-message {
+            display: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--rose-accent);
+            text-align: center;
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-out;
+            font-style: italic;
+        }
+
+        .final-message.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header-photo">
-            <img src="images/IMG-20251230-WA0071_1_.jpg" alt="Tus ojos">
+            <img src="images/foto-nueva-1.jpg" alt="Mi amor">
         </div>
 
         <div class="letter-header">
@@ -252,13 +349,71 @@
             <p>Siempre tuyo,</p>
             <p class="name">Juan Diego</p>
         </div>
+
+        <!-- Botones de respuesta -->
+        <div class="response-container">
+            <p class="response-title">Tu respuesta...</p>
+            <div class="buttons-container">
+                <button class="btn-response btn-si" id="btnSi">Sí ♥</button>
+                <button class="btn-response btn-no" id="btnNo">No</button>
+            </div>
+            <p class="final-message" id="finalMessage">¡Me haces el hombre más feliz del mundo! 💕✨</p>
+        </div>
     </div>
 
     <!-- Confeti animado -->
     <script>
+        let clickCount = 0;
+        const btnSi = document.getElementById('btnSi');
+        const btnNo = document.getElementById('btnNo');
+        const finalMessage = document.getElementById('finalMessage');
+
+        // Cuando intenta dar click al No
+        btnNo.addEventListener('mouseover', function() {
+            clickCount++;
+            
+            // El Sí crece cada vez más
+            btnSi.classList.add('grow');
+            
+            // Después de 3 intentos, el No desaparece
+            if (clickCount >= 3) {
+                btnNo.classList.add('fade-out');
+                setTimeout(() => {
+                    btnNo.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // Cuando da click al No (por si acaso lo logra)
+        btnNo.addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            btnSi.classList.add('grow');
+            
+            if (clickCount >= 2) {
+                btnNo.classList.add('fade-out');
+                setTimeout(() => {
+                    btnNo.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // Cuando da click al Sí
+        btnSi.addEventListener('click', function() {
+            // Ocultar botones
+            document.querySelector('.buttons-container').style.display = 'none';
+            document.querySelector('.response-title').style.display = 'none';
+            
+            // Mostrar mensaje final
+            finalMessage.classList.add('show');
+            
+            // Crear confeti
+            createConfetti();
+        });
+
         // Crear confeti
         function createConfetti() {
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 100; i++) {
                 const confetti = document.createElement('div');
                 confetti.className = 'confetti';
                 confetti.style.left = Math.random() * 100 + '%';
@@ -267,18 +422,15 @@
                 document.body.appendChild(confetti);
             }
         }
-
-        // Iniciar confeti después de 2 segundos
-        setTimeout(createConfetti, 2000);
     </script>
 
     <audio id="bgMusic" loop autoplay>
-        <source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3" type="audio/mpeg">
+        <source src="https://www.bensound.com/bensound-music/bensound-slowmotion.mp3" type="audio/mpeg">
     </audio>
 
     <script>
         const music = document.getElementById('bgMusic');
-        music.volume = 0.3;
+        music.volume = 0.25;
         music.play().catch(err => console.log('Audio playback failed:', err));
     </script>
 </body>
