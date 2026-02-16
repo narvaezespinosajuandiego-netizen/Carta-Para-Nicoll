@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Nicoll - Con todo mi amor</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --rose-light: #fce4ec;
+            --rose-medium: #f8bbd0;
+            --rose-dark: #ec407a;
+            --rose-accent: #d81b60;
+            --cream: #fff8f0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Música se inicia con interacción del usuario */
+        .start-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--rose-light) 0%, var(--cream) 50%, var(--rose-medium) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            cursor: pointer;
+        }
+
+        .start-screen.hidden {
+            display: none;
+        }
+
+        .start-content {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(216, 27, 96, 0.2);
+        }
+
+        .start-content h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            color: var(--rose-accent);
+            margin-bottom: 1rem;
+        }
+
+        .start-content p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .start-btn {
+            font-family: 'Montserrat', sans-serif;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            background: linear-gradient(135deg, var(--rose-dark), var(--rose-accent));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4);
+        }
+
+        /* Secciones/Páginas */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Página 1 - Entrada */
+        #page1 {
+            background: linear-gradient(135deg, var(--rose-light) 0%, var(--cream) 50%, var(--rose-medium) 100%);
+        }
+
+        .petal {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: radial-gradient(ellipse at center, var(--rose-medium) 0%, transparent 70%);
+            border-radius: 50% 0 50% 0;
+            opacity: 0.4;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px) rotate(0deg);
+                opacity: 0.4;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .container-page1 {
+            text-align: center;
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(216, 27, 96, 0.2);
+            max-width: 600px;
+            animation: fadeIn 1.5s ease-out;
+            border: 1px solid rgba(248, 187, 208, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .title-page1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--rose-accent);
+            margin-bottom: 2rem;
+            letter-spacing: 2px;
+        }
+
+        .date {
+            font-family: 'Crimson Text', serif;
+            font-style: italic;
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .message {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        /* Página 2 - Primer recuerdo */
+        #page2 {
+            background: linear-gradient(to bottom, var(--cream) 0%, var(--rose-light) 100%);
+        }
+
+        .container-page2 {
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 25px 70px rgba(216, 27, 96, 0.15);
+            animation: slideIn 1s ease-out;
+            border: 1px solid rgba(248, 187, 208, 0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 2.5rem;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            border: 8px solid white;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 300;
+            color: var(--rose-accent);
+            margin-bottom: 2rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .text-content {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: #444;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .text-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .text-content em {
+            color: var(--rose-dark);
+            font-style: italic;
+        }
+
+        .decorative-line {
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--rose-medium), transparent);
+            margin: 2rem auto;
+        }
+
+        /* Página 3 - Momentos juntos */
+        #page3 {
+            background: linear-gradient(135deg, var(--rose-medium) 0%, var(--cream) 50%, var(--rose-light) 100%);
+        }
+
+        .container-page3 {
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 3rem;
+            box-shadow: 0 25px 70px rgba(216, 27, 96, 0.15);
+        }
+
+        .subtitle {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            color: #666;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .photo-card {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+            border: 6px solid white;
+        }
+
+        .photo-card:hover {
+            transform: scale(1.03);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .message-box {
+            background: linear-gradient(135deg, rgba(248, 187, 208, 0.3), rgba(252, 228, 236, 0.3));
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            border: 2px solid rgba(248, 187, 208, 0.4);
+        }
+
+        .message-box p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.3rem;
+            line-height: 1.9;
+            color: #444;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .message-box em {
+            color: var(--rose-dark);
+            font-weight: 600;
+        }
+
+        /* Página 4 - Carta final */
+        #page4 {
+            background: linear-gradient(to bottom, var(--cream) 0%, var(--rose-light) 50%, var(--rose-medium) 100%);
+        }
+
+        .container-page4 {
+            max-width: 800px;
+            background: white;
+            border-radius: 25px;
+            padding: 4rem 3rem;
+            box-shadow: 0 30px 80px rgba(216, 27, 96, 0.2);
+            border: 3px solid var(--rose-light);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .photo-gallery {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .photo-item {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 6px solid var(--rose-medium);
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.2);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .letter-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid var(--rose-light);
+        }
+
+        .letter-date {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.1rem;
+            color: #888;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+
+        .letter-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--rose-accent);
+            font-weight: 400;
+        }
+
+        .letter-body {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            line-height: 2;
+            color: #333;
+            margin-bottom: 2rem;
+        }
+
+        .letter-body p {
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .letter-body em {
+            color: var(--rose-dark);
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--rose-light), var(--cream));
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2.5rem 0;
+            border-left: 5px solid var(--rose-accent);
+        }
+
+        .question {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--rose-accent);
+            text-align: center;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .signature {
+            text-align: right;
+            margin-top: 3rem;
+        }
+
+        .signature p {
+            font-family: 'Crimson Text', serif;
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
+        .signature .name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            color: var(--rose-accent);
+            font-weight: 600;
+            font-style: italic;
+        }
+
+        .decorative-heart {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--rose-accent);
+            margin: 2rem 0;
+            animation: heartPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes heartPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+        }
+
+        /* Botones de respuesta */
+        .response-container {
+            margin-top: 3rem;
+            text-align: center;
+        }
+
+        .response-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            color: var(--rose-dark);
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            align-items: center;
+            min-height: 150px;
+        }
+
+        .btn-response {
+            font-family: 'Montserrat', sans-serif;
+            padding: 1.5rem 4rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-si {
+            background: linear-gradient(135deg, var(--rose-dark), var(--rose-accent));
+            color: white;
+        }
+
+        .btn-si:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4);
+        }
+
+        .btn-no {
+            background: linear-gradient(135deg, #bbb, #999);
+            color: white;
+            position: relative;
+        }
+
+        .btn-no:hover {
+            background: linear-gradient(135deg, #999, #777);
+        }
+
+        .btn-si.grow {
+            animation: growButton 0.5s ease-out forwards;
+        }
+
+        @keyframes growButton {
+            to {
+                transform: scale(1.3);
+                padding: 2rem 5rem;
+                font-size: 2rem;
+            }
+        }
+
+        .btn-no.fade-out {
+            animation: fadeOut 0.5s ease-out forwards;
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.5);
+                pointer-events: none;
+            }
+        }
+
+        .final-message {
+            display: none;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--rose-accent);
+            text-align: center;
+            margin-top: 2rem;
+            animation: fadeIn 1s ease-out;
+            font-style: italic;
+        }
+
+        .final-message.show {
+            display: block;
+        }
+
+        /* Confeti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: var(--rose-medium);
+            animation: confettiFall 3s linear infinite;
+        }
+
+        @keyframes confettiFall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Botones de navegación */
+        .btn {
+            font-family: 'Montserrat', sans-serif;
+            padding: 1rem 3rem;
+            font-size: 1.1rem;
+            background: linear-gradient(135deg, var(--rose-dark), var(--rose-accent));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(216, 27, 96, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(216, 27, 96, 0.4);
+        }
+
+        .btn-container {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .photos-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .title-page1 {
+                font-size: 2.5rem;
+            }
+            
+            .photo-gallery {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Pantalla de inicio para activar música -->
+    <div class="start-screen" id="startScreen">
+        <div class="start-content">
+            <h1>Para Nicoll</h1>
+            <p>Presiona para comenzar...</p>
+            <button class="start-btn" onclick="startExperience()">♥ Comenzar ♥</button>
+        </div>
+    </div>
+
+    <!-- Página 1: Entrada -->
+    <div class="page active" id="page1">
+        <!-- Pétalos flotantes -->
+        <div class="petal" style="left: 10%; animation-duration: 15s; animation-delay: 0s;"></div>
+        <div class="petal" style="left: 25%; animation-duration: 18s; animation-delay: 2s;"></div>
+        <div class="petal" style="left: 40%; animation-duration: 20s; animation-delay: 4s;"></div>
+        <div class="petal" style="left: 60%; animation-duration: 17s; animation-delay: 1s;"></div>
+        <div class="petal" style="left: 75%; animation-duration: 19s; animation-delay: 3s;"></div>
+        <div class="petal" style="left: 90%; animation-duration: 16s; animation-delay: 5s;"></div>
+
+        <div class="container-page1">
+            <h1 class="title-page1">Estimada señorita Nicoll</h1>
+            <div class="date">Domingo, 16 de febrero de 2026</div>
+            <p class="message">
+                Hay algo que necesito decirte...<br>
+                Algo que ha estado en mi mente desde hace tiempo.<br>
+                <br>
+                <em>¿Estás lista para descubrirlo?</em>
+            </p>
+            <button class="btn" onclick="goToPage(2)">Descubrir el misterio...</button>
+        </div>
+    </div>
+
+    <!-- Página 2: Primer recuerdo -->
+    <div class="page" id="page2">
+        <div class="container-page2">
+            <div class="photo-frame">
+                <img src="images/20260213_145032.jpg" alt="Nicoll">
+            </div>
+
+            <h2>El primer semestre...</h2>
+
+            <div class="decorative-line"></div>
+
+            <div class="text-content">
+                <p>
+                    Recuerdo cuando nos conocimos en la universidad.<br>
+                    Dos estudiantes de ingeniería, cruzando miradas entre clases de cálculo.
+                </p>
+                <p>
+                    Tú tenías pareja entonces, y yo respetaba eso.<br>
+                    Pero no podía evitar que <em>mi mundo girara diferente cuando estabas cerca</em>.
+                </p>
+                <p>
+                    Guardé esos sentimientos en silencio...<br>
+                    Esperando el momento correcto que el universo nos daría.
+                </p>
+            </div>
+
+            <div class="decorative-line"></div>
+
+            <div class="btn-container">
+                <button class="btn" onclick="goToPage(3)">¿Y luego qué pasó?...</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página 3: Momentos juntos -->
+    <div class="page" id="page3">
+        <div class="container-page3">
+            <h2>Y entonces el universo conspiró...</h2>
+            <p class="subtitle">Nos permitió encontrarnos de verdad</p>
+
+            <div class="photos-grid">
+                <div class="photo-card">
+                    <img src="images/IMG-20251114-WA0010.jpg" alt="Nosotros juntos">
+                </div>
+                <div class="photo-card">
+                    <img src="images/20260212_161443.jpg" alt="Momentos felices">
+                </div>
+            </div>
+
+            <div class="message-box">
+                <p>
+                    No sabría decirte exactamente qué es lo que amo de ti,<br>
+                    no porque no haya nada, sino porque <em>el amor no cabe en palabras</em>.
+                </p>
+                <p>
+                    Cada pequeño momento en que existimos en el mismo espacio<br>
+                    se ha convertido en <em>lo más importante para mí</em>.
+                </p>
+                <p>
+                    Como dos ingenieros, sabemos que hay cosas que no se pueden cuantificar...<br>
+                    Y lo que siento por ti es <em>infinito en su propia naturaleza</em>.
+                </p>
+            </div>
+
+            <div class="btn-container">
+                <button class="btn" onclick="goToPage(4)">Hay algo que necesito preguntarte...</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página 4: Carta final -->
+    <div class="page" id="page4">
+        <div class="container-page4">
+            <div class="photo-gallery">
+                <div class="photo-item">
+                    <img src="images/foto-nueva-1.jpg" alt="Mi amor">
+                </div>
+                <div class="photo-item">
+                    <img src="images/foto-nueva-2.jpg" alt="Tu belleza">
+                </div>
+            </div>
+
+            <div class="letter-header">
+                <p class="letter-date">Domingo, 16 de febrero de 2026</p>
+                <h1 class="letter-title">Estimada señorita Nicoll</h1>
+            </div>
+
+            <div class="letter-body">
+                <p>Espero que al leer esta carta te encuentres bien. Te escribo en un momento en que debería estar concentrado en otras cosas, pero la verdad es que pensar en ti se ha vuelto mi distracción favorita.</p>
+
+                <p>Debo confesarte algo: esta carta estaba destinada para el 14 de febrero, pero no pude entregártela. Quizás el destino quiso que esperara, porque hay cosas que necesito decirte con calma, sin prisas, sin el ruido de una fecha señalada en el calendario.</p>
+
+                <p>Desde que nos conocimos en ese primer semestre, algo cambió en mí. Respetaba tu situación entonces, pero no podía evitar que mi mundo girara un poco diferente cuando estabas cerca. Y ahora que el universo nos permitió encontrarnos de verdad, me doy cuenta de que cada pequeño momento en que existimos en el mismo espacio se ha convertido en lo más importante para mí.</p>
+
+                <p>No sabría decirte exactamente qué es lo que amo de ti, no porque no haya nada, sino porque siento que <em>el amor no cabe en palabras ni en listas</em>. Contigo aprendí que amar es algo que simplemente existe, como una verdad que no necesita explicación. Como dos ingenieros sabemos que hay cosas que no se pueden cuantificar, y lo que siento por ti es infinito en su propia naturaleza.</p>
+
+                <p>Este 29 de febrero cumpliremos 5 meses. Una fecha que solo existe cada cuatro años, tan única como lo que tenemos. Y aunque entre los dos decidimos estar juntos, hay algo que quedó pendiente, algo que mi corazón necesita hacer de la manera correcta.</p>
+
+                <p>Sé que es mucho atrevimiento de mi parte, pero quisiera que pasaras el resto de tu vida junto a mí. Y aunque sé que ya estamos juntos, quiero preguntártelo de la forma en que siempre debí hacerlo:</p>
+            </div>
+
+            <div class="highlight-box">
+                <p class="question">
+                    Nicoll, ¿quieres ser mi novia?<br>
+                    ¿Quieres que lo nuestro sea oficial<br>
+                    no solo entre nosotros,<br>
+                    sino ante el mundo entero?
+                </p>
+            </div>
+
+            <div class="letter-body">
+                <p>No prometo perfección, pero sí prometo que cada día elegiré amarte. Prometo que construiremos algo real, verdadero, como tú y como esta carta.</p>
+            </div>
+
+            <div class="decorative-heart">♥</div>
+
+            <div class="signature">
+                <p>Siempre tuyo,</p>
+                <p class="name">Juan Diego</p>
+            </div>
+
+            <!-- Botones de respuesta -->
+            <div class="response-container">
+                <p class="response-title">Tu respuesta...</p>
+                <div class="buttons-container">
+                    <button class="btn-response btn-si" id="btnSi">Sí ♥</button>
+                    <button class="btn-response btn-no" id="btnNo">No</button>
+                </div>
+                <p class="final-message" id="finalMessage">¡Me haces el hombre más feliz del mundo! 💕✨</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Música de fondo - SE CARGA UNA SOLA VEZ -->
+    <audio id="bgMusic" loop>
+        <source src="Music/Cien años.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Variables globales
+        let currentPage = 1;
+        const music = document.getElementById('bgMusic');
+        music.volume = 0.3;
+
+        // Iniciar experiencia
+        function startExperience() {
+            // Ocultar pantalla de inicio
+            document.getElementById('startScreen').classList.add('hidden');
+            
+            // Iniciar música
+            music.play().catch(err => console.log('Audio playback failed:', err));
+        }
+
+        // Cambiar de página
+        function goToPage(pageNumber) {
+            // Ocultar página actual
+            document.getElementById(`page${currentPage}`).classList.remove('active');
+            
+            // Mostrar nueva página
+            setTimeout(() => {
+                document.getElementById(`page${pageNumber}`).classList.add('active');
+                currentPage = pageNumber;
+            }, 300);
+        }
+
+        // Botones de la página 4
+        let clickCount = 0;
+        const btnSi = document.getElementById('btnSi');
+        const btnNo = document.getElementById('btnNo');
+        const finalMessage = document.getElementById('finalMessage');
+
+        // Cuando intenta dar click al No
+        btnNo.addEventListener('mouseover', function() {
+            clickCount++;
+            
+            // El Sí crece cada vez más
+            btnSi.classList.add('grow');
+            
+            // Después de 3 intentos, el No desaparece
+            if (clickCount >= 3) {
+                btnNo.classList.add('fade-out');
+                setTimeout(() => {
+                    btnNo.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // Cuando da click al No (por si acaso lo logra)
+        btnNo.addEventListener('click', function(e) {
+            e.preventDefault();
+            clickCount++;
+            btnSi.classList.add('grow');
+            
+            if (clickCount >= 2) {
+                btnNo.classList.add('fade-out');
+                setTimeout(() => {
+                    btnNo.style.display = 'none';
+                }, 500);
+            }
+        });
+
+        // Cuando da click al Sí
+        btnSi.addEventListener('click', function() {
+            // Ocultar botones
+            document.querySelector('.buttons-container').style.display = 'none';
+            document.querySelector('.response-title').style.display = 'none';
+            
+            // Mostrar mensaje final
+            finalMessage.classList.add('show');
+            
+            // Crear confeti
+            createConfetti();
+        });
+
+        // Crear confeti
+        function createConfetti() {
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '-10px';
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.background = ['#f8bbd0', '#ec407a', '#fce4ec', '#d81b60'][Math.floor(Math.random() * 4)];
+                document.body.appendChild(confetti);
+            }
+        }
+    </script>
+</body>
+</html>
